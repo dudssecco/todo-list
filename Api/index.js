@@ -1,16 +1,12 @@
-const express = require('express')
-const mysql = require('mysql2')
+import express from "express"
+import taskRoutes from "./routes/task.js"
+import cors from "cors"
 
 const app = express()
 
-const conexao = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'dudsdev123',
-    database: 'crud'
-})
+app.use(express.json())
+app.use(cors())
 
-conexao.connect((err) => {
-    if(err) throw err;
-    console.log('Conexão efetuada com sucesso!')
-})
+app.use("/", taskRoutes)
+
+app.listen(8800)
