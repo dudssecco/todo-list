@@ -12,8 +12,17 @@ const Global = createGlobalStyle`
   body {
     width: 100vw;
     min-height: 100vh;
-    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
   }
+
+  button{
+    transition: 0.5s ease;
+  }
+
+  button:hover{
+    scale: 1.15;
+  }
+
 `;
 
 export default Global;

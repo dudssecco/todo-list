@@ -39,8 +39,8 @@ function App() {
     <>
       <Container>
         <Title></Title>
-        <Form />
-        <Grid tasks={tasks} />
+        <Form onEdit={onEdit} setOnEdit={setOnEdit} getTasks={getTasks} />
+        <Grid tasks={tasks} setTasks={setTasks} setOnEdit={setOnEdit} />
       </Container>
       <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_LEFT} />
       <GlobalStyle />

@@ -1,8 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 
 const FormContainer = styled.form`
-    width: 300px;
+    width: 350px;
     height: 75px;
     padding: 10px;
     background-color: rgba(255,255,255,0.3);
@@ -16,6 +19,7 @@ const FormContainer = styled.form`
 `;
 
 const InputArea = styled.div`
+    width: 250px;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -36,11 +40,11 @@ const Label = styled.label``;
 const Button = styled.button`
     height: 40px;
     width: 40px;
-    padding-top: 3px;
+    padding-top: 1px;
     cursor: pointer;
     border-radius: 5px;
     border: none;
-    background-color: #7345ad;
+    background-color: #233e54;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     color: white;
     font-size: 1.5rem;
@@ -49,16 +53,60 @@ const Button = styled.button`
     justify-content: center;
 `;
 
-const Form = ({ onEdit }) => {
+
+const Form = ({ onEdit, setOnEdit, getTasks }) => {
     const ref = useRef();
 
+    useEffect(() => {
+        if(onEdit) {
+            const task = ref.current
+
+            task.descricao.value = onEdit.descricao
+        }
+    }, [onEdit]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        const task = ref.current;
+    
+        if (
+          !task.descricao.value 
+        ) {
+          return toast.warn("Preencha todos os campos!");
+        }
+    
+        if (onEdit) {
+          await axios
+            .put("http://localhost:8800/" + onEdit.id, {
+              descricao: task.descricao.value,
+            })
+            .then(({ data }) => toast.success(data))
+            .catch(({ data }) => toast.error(data));
+        } else {
+          await axios
+            .post("http://localhost:8800", {
+                descricao: task.descricao.value,
+            })
+            .then(({ data }) => toast.success(data))
+            .catch(({ data }) => toast.error(data));
+        }
+    
+        task.descricao.value = "";
+    
+        setOnEdit(null);
+        getTasks();
+      };
+
+
+
     return (
-        <FormContainer ref={ref}>
+        <FormContainer ref={ref} onSubmit={handleSubmit}>
             <InputArea>
                 <Label></Label>
                 <Input name="descricao" />
             </InputArea>
-            <Button><i class="bi bi-caret-right"></i></Button>
+            <Button type="submit"><i class="bi bi-caret-right"></i></Button>
         </FormContainer>
     )
 }

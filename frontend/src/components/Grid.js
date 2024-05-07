@@ -6,16 +6,15 @@ import { toast } from "react-toastify";
 
 
 export const Table = styled.table`
-    width: 300px;
+    width: 350px;
     padding: 10px;
     background-color: rgba(255,255,255,0.3);
     border: 2px solid white;
     border-radius: 20px;
-    word-break: break-all;
 `;
 
 export const Thead = styled.thead`
-
+    margin-bottom:30px;
 `;
 
 export const Tr = styled.tr`
@@ -24,8 +23,10 @@ export const Tr = styled.tr`
 
 export const Th = styled.th`
     text-align: start;
-    border-bottom: 2px solid white;
-    padding-bottom: 5px;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+    padding: 5px;
+    font-size: 1.25rem;
+    margin-bottom: 30px;
 `;
 
 export const Tbody = styled.tbody`
@@ -33,17 +34,40 @@ export const Tbody = styled.tbody`
 `;
 
 export const Td = styled.td`
-    padding-top: 15px
-    text-align: ${(props) => (props.alignCenter ? "center" : "start")};
-    width: ${(props) => (props.width ? props.width : "auto")}
+    padding: 20px 0px;
+    font-size: 1.2rem;
+
 `;
 
-const Grid = ({tasks}) => {
+const Grid = ({tasks, setTasks, setOnEdit}) => {
+
+    const handleEdit = (item) => {
+        setOnEdit(item)
+    }
+
+    const handleDelete = async (id) => {
+        await axios
+            .delete("http://localhost:8800/" + id)
+            .then(({data}) => {
+                const newArray = tasks.filter((task) => task.id !== id)
+
+                setTasks(newArray)
+                toast.success(data)
+            })
+            .catch(({data}) => toast.error(data))
+
+        setOnEdit(null);
+    }
+
+
+
+
+
     return(
         <Table>
             <Thead>
                 <Tr>
-                    <Th>Task</Th>
+                    <Th>Tasks</Th>
                     <Th></Th>
                     <Th></Th>
                 </Tr>
@@ -53,10 +77,10 @@ const Grid = ({tasks}) => {
                     <Tr key={i}>
                         <Td width="30%">{item.descricao}</Td>
                         <Td alignCenter width="5%">
-                            <FaEdit />
+                            <FaEdit onClick={() => handleEdit(item)}/>
                         </Td>
                         <Td alignCenter width="5%">
-                            <FaTrash />
+                            <FaTrash onClick={() => handleDelete(item.id)} />
                         </Td>
                     </Tr>
                 ))}
