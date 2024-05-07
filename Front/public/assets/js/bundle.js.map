@@ -1,1 +1,0 @@
-{"version":3,"file":"bundle.js","mappings":";;;;;AAAAA,OAAO,CAACC,GAAG,CAAC,OAAO,CAAC,C","sources":["webpack://front/./src/scripts/index.js"],"sourcesContent":["console.log('teste')"],"names":["console","log"],"sourceRoot":""}
